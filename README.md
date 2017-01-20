@@ -7,7 +7,7 @@ Download from  https://github.com/tkuchiki/cmd-rotate/releases
 
 # Usage
 
-```
+```shell
 $ ./cmd-rotate --help
 usage: cmd-rotate [<flags>] [<args>...]
 
@@ -29,7 +29,7 @@ Args:
 
 # Examples
 
-```
+```shell
 $ ./cmd-rotate --file-size=10000 "for i in \$(seq 1 10000); do echo \$i; echo \$((\$i + 100000)) 1>&2; done"
 
 $ ll ${TMPDIR}/std*.log*
@@ -61,7 +61,7 @@ $ wc -l ${TMPDIR}/std*.log*
    20000 total
 ```
 
-```
+```shell
 $ ./cmd-rotate --file-size=10000 --merge-log "for i in \$(seq 1 10000); do echo \$i; echo \$((\$i + 100000)) 1>&2; done"
 
 $ ll ${TMPDIR}/std*.log*
@@ -95,10 +95,7 @@ $ wc -l ${TMPDIR}/std*.log*
 
 ```
 
-```
-
-```
-
+```shell
 $ ./cmd-rotate --file-size=10000 --merge-log --file-num=5 "for i in \$(seq 1 10000); do echo \$i; echo \$((\$i + 100000)) 1>&2; done"
 removed /tmp/stdout.log-1484896835231790682
 removed /tmp/stdout.log-1484896835246696757
@@ -122,3 +119,4 @@ $ wc -l ${TMPDIR}/std*.log*
     1667 /tmp/stdout.log-1484896835368019663
     1667 /tmp/stdout.log-1484896835382824530
     8146 total
+```
