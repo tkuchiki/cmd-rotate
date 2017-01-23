@@ -20,7 +20,7 @@ var (
 )
 
 func main() {
-	kingpin.Version("0.1.0")
+	kingpin.Version("0.1.1")
 	kingpin.Parse()
 
 	if *fileNum < 1 {
@@ -70,9 +70,11 @@ func main() {
 
 	c.stdoutLog = fout
 
-	_, cerr := c.runCommand()
+	exitCode, cerr := c.runCommand()
 
 	if cerr != nil {
 		log.Fatal(cerr)
 	}
+
+	os.Exit(exitCode)
 }
