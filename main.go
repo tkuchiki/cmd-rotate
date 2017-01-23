@@ -20,7 +20,7 @@ var (
 )
 
 func main() {
-	kingpin.Version("0.1.1")
+	kingpin.Version("0.1.2")
 	kingpin.Parse()
 
 	if *fileNum < 1 {

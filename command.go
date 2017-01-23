@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"syscall"
 )
@@ -22,14 +24,35 @@ var (
 func (c *command) runCommand() (int, error) {
 	cmd := exec.Command("sh", "-c", c.args)
 
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return 1, err
+	}
+
+	stdinfi, err := os.Stdin.Stat()
+	if err != nil {
+		return 1, err
+	}
+
+	if stdinfi.Mode()&os.ModeNamedPipe != 0 {
+		err := c.readWriteStdio(os.Stdin, stdin)
+		if err != nil {
+			return 1, err
+		}
+	}
+	stdin.Close()
+
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return 1, err
 	}
+	defer stdout.Close()
+
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return 1, err
 	}
+	defer stderr.Close()
 
 	if err = cmd.Start(); err != nil {
 		return 1, err
@@ -59,6 +82,19 @@ func (c *command) runCommand() (int, error) {
 	}
 
 	return exitCode, err
+}
+
+func (c *command) readWriteStdio(r io.Reader, w io.Writer) error {
+	scanner := bufio.NewScanner(r)
+
+	for scanner.Scan() {
+		_, err := io.WriteString(w, fmt.Sprintln(scanner.Text()))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (c *command) readIo(r io.Reader, q chan string) {
